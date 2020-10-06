@@ -221,7 +221,7 @@ class CarUsersCard extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: Text(
                 "${bio ?? "Bio Data"}",
-                style: GoogleFonts.aldrich(
+                style: GoogleFonts.poppins(
                   color: Color(0xFF2e282a),
                   fontSize: 18.0,
                 ),
