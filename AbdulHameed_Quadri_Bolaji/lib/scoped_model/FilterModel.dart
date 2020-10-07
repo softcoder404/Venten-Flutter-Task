@@ -23,8 +23,7 @@ class AppScopedModel extends Model {
       List<Filter> filters = await NetworkHelper.fetchFilters();
       if (filters != null) {
         _filters = filters;
-        getListOfCarUsers();
-        notifyListeners();
+        toggleLoadingState(false);
       }
     } catch (e) {
       print('error report :' + e.toString());
