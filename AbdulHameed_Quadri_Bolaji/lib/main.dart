@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return ScopedModel<AppScopedModel>(
       model: model,
       child: MaterialApp(
-        title: "readExcelFile",
+        title: "Venten App Task",
         debugShowCheckedModeBanner: false,
         home: HomePage(model),
       ),
