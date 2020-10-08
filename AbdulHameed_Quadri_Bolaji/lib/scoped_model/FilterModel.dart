@@ -6,6 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 class AppScopedModel extends Model {
   //creating a list of filter
+  
   List<Filter> _filters = [];
   List<Filter> get filter => _filters; // filter list getter
   //setting a loading state
@@ -23,6 +24,7 @@ class AppScopedModel extends Model {
       List<Filter> filters = await NetworkHelper.fetchFilters();
       if (filters != null) {
         _filters = filters;
+        notifyListeners();
         toggleLoadingState(false);
       }
     } catch (e) {
@@ -34,13 +36,11 @@ class AppScopedModel extends Model {
 //get list of car users method
   Future<void> getListOfCarUsers() async {
     try {
-      //do something
-      toggleLoadingState(true);
       var dynamicCarUsers = await PathHelpers.loadCsv();
       for (int index = 1; index < dynamicCarUsers.length; index++) {
         _carUsers.add(CarUsers.fromDynamicList(dynamicCarUsers[index]));
       }
-      toggleLoadingState(false);
+      notifyListeners();
     } catch (e) {
       //print error
       print(e.toString());
