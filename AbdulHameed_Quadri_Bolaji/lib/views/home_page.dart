@@ -1,9 +1,9 @@
+import 'package:AbdulHameed_Quadri_Bolaji/utils/widgets/home_page_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import '../models/Filter.dart';
 import '../network/network_helper.dart';
 import '../scoped_model/FilterModel.dart';
-import '../utils/widgets/filter_card.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,10 +20,11 @@ class _HomePageState extends State<HomePage> {
 
   final GlobalKey<LiquidPullToRefreshState> _refreshIndicatorKey =
       GlobalKey<LiquidPullToRefreshState>();
+  Future<void> fetchCarOwner()async=> await widget.model.getListOfCarUsers();
   @override
   void initState() {
     super.initState();
-    widget.model.getListOfCarUsers();
+    fetchCarOwner();
     widget.model.getFilters();
   }
 
@@ -44,49 +45,17 @@ class _HomePageState extends State<HomePage> {
         color: Color(0xffFF4D52).withOpacity(.8),
         child: ScopedModelDescendant<AppScopedModel>(builder:
             (BuildContext context, Widget child, AppScopedModel model) {
-          Widget widgetToRender = ListView(
-            children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                margin: EdgeInsets.only(top: 80.0),
-                child: Image.asset(
-                  'assets/images/error.png',
-                ),
-              ),
-              Center(
-                  child: Text(
-                'No filters found!',
-                style: TextStyle(fontWeight: FontWeight.w500),
-              )),
-              Center(
-                  child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Please Pull Down To Refresh Page',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )),
-            ],
-          );
+          Widget widgetToRender;
           if (model.isLoading) {
-            widgetToRender = Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xffFF4D52)),
-                backgroundColor: Colors.white38,
-              ),
-            );
+            widgetToRender = loadingProgress();
           } else if (!model.isLoading && model.filter.length > 0) {
-            widgetToRender = _buildListView(model);
+            widgetToRender = buildListView(model);
+          } else {
+            widgetToRender = errorWidget();
           }
           return widgetToRender;
         }),
       ),
     );
   }
-
-  Widget _buildListView(AppScopedModel model) => ListView.builder(
-      itemCount: model.filter.length,
-      itemBuilder: (BuildContext context, int index) =>
-          FilterCard(filter: model.filter[index], model: widget.model));
 }
